@@ -88,9 +88,9 @@ Transport management system/
    Edit the `.env` file if needed:
    ```env
    PORT=3000
-   MONGODB_URI=mongodb://localhost:27017/transport_management
-   JWT_SECRET=your-super-secret-jwt-key-change-in-production
-   JWT_EXPIRE=7d
+   MONGODB_URI= Your mongo db url / you want to make db name 
+   JWT_SECRET= you can make your own 
+   JWT_EXPIRE=your can choose end day to expire jwt
    ```
 
 4. **Start MongoDB**
