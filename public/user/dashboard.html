@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Dashboard - TransportPro</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fas fa-car-side"></i>
+                    <span>TransportPro</span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active" data-section="home">
+                    <i class="fas fa-home"></i>
+                    <span>Home</span>
+                </a>
+                <a href="#" class="nav-item" data-section="book">
+                    <i class="fas fa-plus-circle"></i>
+                    <span>Book Ride</span>
+                </a>
+                <a href="#" class="nav-item" data-section="rides">
+                    <i class="fas fa-history"></i>
+                    <span>My Rides</span>
+                </a>
+                <a href="#" class="nav-item" data-section="profile">
+                    <i class="fas fa-user"></i>
+                    <span>Profile</span>
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <button id="logoutBtn" class="btn btn-outline btn-block">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Logout
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="dashboard-header">
+                <button class="menu-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="header-right">
+                    <div class="location-display">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span id="currentLocation">Fetching location...</span>
+                    </div>
+                    <div class="user-info">
+                        <img id="userAvatar" src="/images/default-avatar.png" alt="User" class="avatar">
+                        <span id="userName">User</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Dashboard Sections -->
+            <div class="dashboard-content">
+                <!-- Home Section -->
+                <section id="homeSection" class="content-section active">
+                    <div class="welcome-banner">
+                        <div class="welcome-text">
+                            <h1>Welcome back, <span id="welcomeName">User</span>!</h1>
+                            <p>Where would you like to go today?</p>
+                        </div>
+                        <button class="btn btn-primary btn-lg" data-action="book">
+                            <i class="fas fa-plus"></i> Book a Ride
+                        </button>
+                    </div>
+
+                    <!-- Stats Cards -->
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon bg-primary">
+                                <i class="fas fa-car"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 id="totalRides">0</h3>
+                                <p>Total Rides</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon bg-success">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 id="completedRides">0</h3>
+                                <p>Completed</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon bg-warning">
+                                <i class="fas fa-times-circle"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 id="cancelledRides">0</h3>
+                                <p>Cancelled</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon bg-info">
+                                <i class="fas fa-rupee-sign"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 id="totalSpent">₹0</h3>
+                                <p>Total Spent</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Book -->
+                    <div class="quick-book-section">
+                        <h2>Quick Book</h2>
+                        <div class="quick-book-form">
+                            <div class="location-inputs">
+                                <div class="input-group">
+                                    <div class="input-icon pickup-dot"></div>
+                                    <input type="text" id="quickPickup" placeholder="Enter pickup location">
+                                    <button class="location-btn" title="Use current location">
+                                        <i class="fas fa-crosshairs"></i>
+                                    </button>
+                                </div>
+                                <div class="input-divider"></div>
+                                <div class="input-group">
+                                    <div class="input-icon dropoff-dot"></div>
+                                    <input type="text" id="quickDropoff" placeholder="Where to?">
+                                </div>
+                            </div>
+                            <button id="quickSearchBtn" class="btn btn-primary">
+                                <i class="fas fa-search"></i> Find Rides
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Recent Rides -->
+                    <div class="recent-rides-section">
+                        <div class="section-header">
+                            <h2>Recent Rides</h2>
+                            <a href="#" data-action="rides">View All</a>
+                        </div>
+                        <div id="recentRidesList" class="rides-list">
+                            <div class="empty-state">
+                                <i class="fas fa-car"></i>
+                                <p>No recent rides</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Book Ride Section -->
+                <section id="bookSection" class="content-section">
+                    <h2>Book a Ride</h2>
+                    
+                    <div class="booking-container">
+                        <div class="booking-form-card">
+                            <!-- Step 1: Location -->
+                            <div id="step1" class="booking-step active">
+                                <h3>Enter Location</h3>
+                                <div class="location-inputs vertical">
+                                    <div class="input-group">
+                                        <div class="input-icon pickup-dot"></div>
+                                        <input type="text" id="bookPickup" placeholder="Enter pickup location">
+                                        <button class="location-btn use-current" title="Use current location">
+                                            <i class="fas fa-crosshairs"></i>
+                                        </button>
+                                    </div>
+                                    <div class="input-divider"></div>
+                                    <div class="input-group">
+                                        <div class="input-icon dropoff-dot"></div>
+                                        <input type="text" id="bookDropoff" placeholder="Where to?">
+                                    </div>
+                                </div>
+                                <button id="getEstimateBtn" class="btn btn-primary btn-block">
+                                    Get Fare Estimate
+                                </button>
+                            </div>
+
+                            <!-- Step 2: Select Vehicle & Driver -->
+                            <div id="step2" class="booking-step">
+                                <div class="step-header">
+                                    <button class="back-btn">
+                                        <i class="fas fa-arrow-left"></i>
+                                    </button>
+                                    <h3>Choose Your Ride</h3>
+                                </div>
+                                
+                                <div class="route-summary">
+                                    <div class="route-point">
+                                        <div class="pickup-dot"></div>
+                                        <span id="summaryPickup">Pickup location</span>
+                                    </div>
+                                    <div class="route-line"></div>
+                                    <div class="route-point">
+                                        <div class="dropoff-dot"></div>
+                                        <span id="summaryDropoff">Drop-off location</span>
+                                    </div>
+                                    <div class="route-info">
+                                        <span><i class="fas fa-route"></i> <span id="routeDistance">0</span> km</span>
+                                        <span><i class="fas fa-clock"></i> <span id="routeDuration">0</span> min</span>
+                                    </div>
+                                </div>
+
+                                <!-- Vehicle Type Selection -->
+                                <h4 class="section-label">Select Vehicle Type</h4>
+                                <div id="vehiclesList" class="vehicles-list">
+                                    <!-- Vehicle options will be loaded here -->
+                                </div>
+
+                                <!-- Available Drivers Section -->
+                                <div id="driversSection" class="drivers-section hidden">
+                                    <h4 class="section-label">
+                                        <i class="fas fa-users"></i> Available Drivers
+                                        <span id="driverCount" class="driver-count">0 drivers found</span>
+                                    </h4>
+                                    <div id="driversList" class="drivers-list">
+                                        <!-- Available drivers will be loaded here -->
+                                        <div class="loading-drivers">
+                                            <div class="loader"></div>
+                                            <p>Searching for drivers...</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <button id="confirmVehicleBtn" class="btn btn-primary btn-block" disabled>
+                                    Continue with Selected Driver
+                                </button>
+                            </div>
+
+                            <!-- Step 3: Confirm Booking -->
+                            <div id="step3" class="booking-step">
+                                <div class="step-header">
+                                    <button class="back-btn">
+                                        <i class="fas fa-arrow-left"></i>
+                                    </button>
+                                    <h3>Confirm Booking</h3>
+                                </div>
+                                
+                                <div class="booking-summary">
+                                    <div class="summary-section">
+                                        <h4>Route</h4>
+                                        <div class="route-details">
+                                            <div class="route-point">
+                                                <div class="pickup-dot"></div>
+                                                <span id="confirmPickup">Pickup</span>
+                                            </div>
+                                            <div class="route-point">
+                                                <div class="dropoff-dot"></div>
+                                                <span id="confirmDropoff">Drop-off</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="summary-section">
+                                        <h4>Vehicle</h4>
+                                        <div class="vehicle-summary">
+                                            <span id="confirmVehicleIcon">🚗</span>
+                                            <span id="confirmVehicle">Car</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="summary-section">
+                                        <h4>Fare Breakdown</h4>
+                                        <div class="fare-breakdown">
+                                            <div class="fare-row">
+                                                <span>Base Fare</span>
+                                                <span id="fareBase">₹0</span>
+                                            </div>
+                                            <div class="fare-row">
+                                                <span>Distance (<span id="fareDistanceKm">0</span> km)</span>
+                                                <span id="fareDistance">₹0</span>
+                                            </div>
+                                            <div class="fare-row">
+                                                <span>Time (<span id="fareTimeMin">0</span> min)</span>
+                                                <span id="fareTime">₹0</span>
+                                            </div>
+                                            <div class="fare-row surge hidden">
+                                                <span>Surge</span>
+                                                <span id="fareSurge">₹0</span>
+                                            </div>
+                                            <div class="fare-row total">
+                                                <span>Total</span>
+                                                <span id="fareTotal">₹0</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="summary-section">
+                                        <h4>Payment Method</h4>
+                                        <div class="payment-methods">
+                                            <label class="payment-option selected">
+                                                <input type="radio" name="payment" value="cash" checked>
+                                                <div class="payment-icon">
+                                                    <i class="fas fa-money-bill-wave"></i>
+                                                </div>
+                                                <div class="payment-info">
+                                                    <span class="payment-name">Cash</span>
+                                                    <span class="payment-desc">Pay after ride</span>
+                                                </div>
+                                            </label>
+                                            <label class="payment-option">
+                                                <input type="radio" name="payment" value="upi">
+                                                <div class="payment-icon upi">
+                                                    <i class="fas fa-mobile-alt"></i>
+                                                </div>
+                                                <div class="payment-info">
+                                                    <span class="payment-name">UPI</span>
+                                                    <span class="payment-desc">GPay, PhonePe, Paytm</span>
+                                                </div>
+                                            </label>
+                                            <label class="payment-option">
+                                                <input type="radio" name="payment" value="card">
+                                                <div class="payment-icon card">
+                                                    <i class="fas fa-credit-card"></i>
+                                                </div>
+                                                <div class="payment-info">
+                                                    <span class="payment-name">Card</span>
+                                                    <span class="payment-desc">Credit/Debit Card</span>
+                                                </div>
+                                            </label>
+                                            <label class="payment-option">
+                                                <input type="radio" name="payment" value="wallet">
+                                                <div class="payment-icon wallet">
+                                                    <i class="fas fa-wallet"></i>
+                                                </div>
+                                                <div class="payment-info">
+                                                    <span class="payment-name">Wallet</span>
+                                                    <span class="payment-desc">Pay from wallet balance</span>
+                                                </div>
+                                            </label>
+                                        </div>
+                                        
+                                        <!-- Online Payment Notice -->
+                                        <div id="onlinePaymentNotice" class="online-payment-notice hidden">
+                                            <i class="fas fa-info-circle"></i>
+                                            <span>You will be redirected to complete payment after booking</span>
+                                        </div>
+                                    </div>
+
+                                    <!-- Selected Driver Info -->
+                                    <div class="summary-section" id="selectedDriverInfo">
+                                        <h4>Your Driver</h4>
+                                        <div class="selected-driver-card">
+                                            <img id="selectedDriverPhoto" src="/images/default-avatar.png" alt="Driver">
+                                            <div class="driver-details">
+                                                <h5 id="selectedDriverName">Driver Name</h5>
+                                                <div class="driver-meta">
+                                                    <span class="rating"><i class="fas fa-star"></i> <span id="selectedDriverRating">4.5</span></span>
+                                                    <span class="rides"><i class="fas fa-car"></i> <span id="selectedDriverRides">0</span> rides</span>
+                                                </div>
+                                                <p id="selectedDriverVehicle">Vehicle info</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <button id="confirmBookingBtn" class="btn btn-success btn-block btn-lg">
+                                    <i class="fas fa-check"></i> Confirm Booking
+                                </button>
+                            </div>
+
+                            <!-- Step 4: Booking Confirmed / Tracking -->
+                            <div id="step4" class="booking-step">
+                                <div class="booking-confirmed">
+                                    <div class="success-animation">
+                                        <i class="fas fa-check-circle"></i>
+                                    </div>
+                                    <h3>Booking Confirmed!</h3>
+                                    <p class="booking-id">Booking ID: <span id="bookingIdDisplay">TMS000000</span></p>
+                                    
+                                    <div class="driver-search-status">
+                                        <div class="loader"></div>
+                                        <p id="searchStatus">Searching for nearby drivers...</p>
+                                    </div>
+
+                                    <div id="driverDetails" class="driver-details hidden">
+                                        <img id="driverPhoto" src="/images/default-avatar.png" alt="Driver">
+                                        <div class="driver-info">
+                                            <h4 id="driverName">Driver Name</h4>
+                                            <p><i class="fas fa-star"></i> <span id="driverRating">4.5</span></p>
+                                        </div>
+                                        <div class="vehicle-info">
+                                            <p id="vehicleDetails">White Swift</p>
+                                            <p class="vehicle-number" id="vehicleNumber">DL XX XX 0000</p>
+                                        </div>
+                                        <a href="#" id="callDriver" class="btn btn-success">
+                                            <i class="fas fa-phone"></i>
+                                        </a>
+                                    </div>
+
+                                    <div id="otpSection" class="otp-section hidden">
+                                        <p>Share this OTP with driver to start ride</p>
+                                        <div class="otp-display" id="otpDisplay">0000</div>
+                                    </div>
+
+                                    <div class="ride-status-timeline" id="statusTimeline">
+                                        <div class="timeline-item active">
+                                            <div class="timeline-dot"></div>
+                                            <span>Booking Confirmed</span>
+                                        </div>
+                                        <div class="timeline-item" data-status="accepted">
+                                            <div class="timeline-dot"></div>
+                                            <span>Driver Assigned</span>
+                                        </div>
+                                        <div class="timeline-item" data-status="arriving">
+                                            <div class="timeline-dot"></div>
+                                            <span>Driver Arriving</span>
+                                        </div>
+                                        <div class="timeline-item" data-status="started">
+                                            <div class="timeline-dot"></div>
+                                            <span>Ride Started</span>
+                                        </div>
+                                        <div class="timeline-item" data-status="completed">
+                                            <div class="timeline-dot"></div>
+                                            <span>Ride Completed</span>
+                                        </div>
+                                    </div>
+
+                                    <button id="cancelBookingBtn" class="btn btn-danger btn-block">
+                                        Cancel Booking
+                                    </button>
+                                    
+                                    <button id="newBookingBtn" class="btn btn-primary btn-block hidden">
+                                        Book Another Ride
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Map Placeholder -->
+                        <div class="map-container">
+                            <div class="map-placeholder">
+                                <i class="fas fa-map-marked-alt"></i>
+                                <p>Map View</p>
+                                <small>Enter locations to see route</small>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- My Rides Section -->
+                <section id="ridesSection" class="content-section">
+                    <h2>My Rides</h2>
+                    
+                    <div class="filters-bar">
+                        <div class="filter-tabs">
+                            <button class="filter-tab active" data-status="">All</button>
+                            <button class="filter-tab" data-status="completed">Completed</button>
+                            <button class="filter-tab" data-status="cancelled">Cancelled</button>
+                            <button class="filter-tab" data-status="pending">Pending</button>
+                        </div>
+                    </div>
+
+                    <div id="allRidesList" class="rides-list-full">
+                        <div class="empty-state">
+                            <i class="fas fa-car"></i>
+                            <p>No rides found</p>
+                        </div>
+                    </div>
+
+                    <div id="ridesPagination" class="pagination hidden">
+                        <button class="btn btn-sm" id="prevPage">Previous</button>
+                        <span id="pageInfo">Page 1</span>
+                        <button class="btn btn-sm" id="nextPage">Next</button>
+                    </div>
+                </section>
+
+                <!-- Profile Section -->
+                <section id="profileSection" class="content-section">
+                    <h2>My Profile</h2>
+                    
+                    <div class="profile-container">
+                        <div class="profile-card">
+                            <div class="profile-header">
+                                <div class="avatar-upload">
+                                    <img id="profileAvatar" src="/images/default-avatar.png" alt="Profile">
+                                    <button class="avatar-edit">
+                                        <i class="fas fa-camera"></i>
+                                    </button>
+                                </div>
+                                <h3 id="profileName">User Name</h3>
+                                <p id="profileEmail">user@email.com</p>
+                            </div>
+                            
+                            <form id="profileForm" class="profile-form">
+                                <div class="form-group">
+                                    <label>Full Name</label>
+                                    <input type="text" id="profileNameInput" name="name" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Phone Number</label>
+                                    <input type="tel" id="profilePhone" name="phone" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Email (cannot change)</label>
+                                    <input type="email" id="profileEmailInput" disabled>
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-block">
+                                    Update Profile
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Rating Modal -->
+    <div id="ratingModal" class="modal hidden">
+        <div class="modal-content">
+            <h2>Rate Your Ride</h2>
+            <div class="rating-stars">
+                <i class="fas fa-star" data-rating="1"></i>
+                <i class="fas fa-star" data-rating="2"></i>
+                <i class="fas fa-star" data-rating="3"></i>
+                <i class="fas fa-star" data-rating="4"></i>
+                <i class="fas fa-star" data-rating="5"></i>
+            </div>
+            <textarea id="ratingReview" placeholder="Write a review (optional)"></textarea>
+            <button id="submitRatingBtn" class="btn btn-primary btn-block">Submit Rating</button>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div id="toast" class="toast hidden"></div>
+
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    <script src="/js/user-dashboard.js"></script>
+</body>
+</html>

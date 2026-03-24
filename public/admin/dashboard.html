@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - TransportPro</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .admin-header { background: linear-gradient(135deg, #1f2937 0%, #111827 100%); }
+        .sidebar { background: #111827; }
+        .nav-item.active { background: rgba(79, 70, 229, 0.3); }
+        
+        .admin-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .admin-stat-card {
+            background: var(--white);
+            padding: 20px;
+            border-radius: var(--radius);
+            text-align: center;
+            box-shadow: var(--shadow);
+        }
+        
+        .admin-stat-card .value {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        
+        .admin-stat-card .label {
+            font-size: 13px;
+            color: var(--gray);
+        }
+        
+        .admin-stat-card.primary .value { color: var(--primary); }
+        .admin-stat-card.success .value { color: var(--secondary); }
+        .admin-stat-card.warning .value { color: var(--warning); }
+        .admin-stat-card.danger .value { color: var(--danger); }
+        .admin-stat-card.info .value { color: var(--info); }
+        
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .dashboard-card {
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+        
+        .dashboard-card .card-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--gray-lighter);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .dashboard-card .card-body {
+            padding: 20px;
+        }
+        
+        .mini-list {
+            list-style: none;
+        }
+        
+        .mini-list li {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--gray-lighter);
+        }
+        
+        .mini-list li:last-child { border-bottom: none; }
+        
+        .user-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .user-item img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        
+        .search-bar {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .search-bar input {
+            flex: 1;
+            padding: 12px 20px;
+            border: 2px solid var(--gray-lighter);
+            border-radius: var(--radius-sm);
+            font-size: 16px;
+        }
+        
+        .action-btns { display: flex; gap: 8px; }
+        
+        .badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .badge-success { background: rgba(16, 185, 129, 0.1); color: var(--secondary); }
+        .badge-warning { background: rgba(245, 158, 11, 0.1); color: var(--warning); }
+        .badge-danger { background: rgba(239, 68, 68, 0.1); color: var(--danger); }
+        .badge-primary { background: rgba(79, 70, 229, 0.1); color: var(--primary); }
+        
+        .pending-approval {
+            background: var(--white);
+            padding: 20px;
+            border-radius: var(--radius);
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+            border-left: 4px solid var(--warning);
+        }
+        
+        .pending-approval h3 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .pending-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .pending-item {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 15px;
+            background: var(--light);
+            border-radius: var(--radius-sm);
+        }
+        
+        .pending-item img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        
+        .pending-item .info { flex: 1; }
+        
+        .pending-item .actions { display: flex; gap: 10px; }
+        
+        .vehicle-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 10px;
+            background: var(--light);
+            border-radius: 20px;
+            font-size: 13px;
+        }
+        
+        .otp-input {
+            text-align: center;
+            font-size: 32px;
+            letter-spacing: 10px;
+            padding: 15px;
+            border: 2px solid var(--gray-lighter);
+            border-radius: var(--radius-sm);
+            width: 100%;
+            margin: 20px 0;
+        }
+        
+        .chart-placeholder {
+            height: 200px;
+            background: linear-gradient(135deg, #f5f7ff 0%, #e8ecff 100%);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray);
+        }
+        
+        .quick-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .quick-stat-card {
+            background: var(--white);
+            padding: 20px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
+        
+        .quick-stat-card h4 {
+            color: var(--gray);
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+        
+        .quick-stat-card .value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .earnings-overview {
+            margin-bottom: 30px;
+        }
+        
+        .earnings-card.main {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 30px;
+            border-radius: var(--radius);
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .earnings-card.main .amount {
+            font-size: 48px;
+            font-weight: 700;
+        }
+        
+        .earnings-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+        
+        .earnings-card {
+            background: var(--white);
+            padding: 20px;
+            border-radius: var(--radius);
+            text-align: center;
+            box-shadow: var(--shadow);
+        }
+        
+        .earnings-card .amount {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--secondary);
+        }
+        
+        .profile-details {
+            padding: 20px;
+            border-bottom: 1px solid var(--gray-lighter);
+        }
+        
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--gray-lighter);
+        }
+        
+        .detail-row:last-child { border-bottom: none; }
+        
+        .driver-rating-display {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            margin-top: 10px;
+            color: var(--warning);
+        }
+        
+        .section-subtitle {
+            color: var(--gray);
+            margin-bottom: 20px;
+        }
+        
+        .requests-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .card-grid { grid-template-columns: 1fr; }
+            .quick-stats-grid { grid-template-columns: 1fr; }
+            .earnings-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fas fa-car-side"></i>
+                    <span>TransportPro</span>
+                </div>
+                <span class="badge badge-primary">Admin</span>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active" data-section="dashboard">
+                    <i class="fas fa-chart-pie"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#" class="nav-item" data-section="users">
+                    <i class="fas fa-users"></i>
+                    <span>Users</span>
+                </a>
+                <a href="#" class="nav-item" data-section="drivers">
+                    <i class="fas fa-id-card"></i>
+                    <span>Drivers</span>
+                    <span class="nav-badge" id="pendingCount">0</span>
+                </a>
+                <a href="#" class="nav-item" data-section="bookings">
+                    <i class="fas fa-car"></i>
+                    <span>Bookings</span>
+                </a>
+                <a href="#" class="nav-item" data-section="vehicles">
+                    <i class="fas fa-truck"></i>
+                    <span>Vehicle Types</span>
+                </a>
+                <a href="#" class="nav-item" data-section="analytics">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>Analytics</span>
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <button id="logoutBtn" class="btn btn-outline btn-block">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Logout
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="dashboard-header admin-header">
+                <button class="menu-toggle" style="color: white;">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="header-right">
+                    <div class="user-info" style="color: white;">
+                        <img id="userAvatar" src="/images/default-avatar.png" alt="Admin" class="avatar">
+                        <span id="userName">Admin</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Dashboard Content -->
+            <div class="dashboard-content">
+                <!-- Dashboard Section -->
+                <section id="dashboardSection" class="content-section active">
+                    <h2>Admin Dashboard</h2>
+                    
+                    <!-- Stats Grid -->
+                    <div class="admin-stats-grid">
+                        <div class="admin-stat-card primary">
+                            <div class="value" id="totalUsers">0</div>
+                            <div class="label">Total Users</div>
+                        </div>
+                        <div class="admin-stat-card info">
+                            <div class="value" id="totalDrivers">0</div>
+                            <div class="label">Total Drivers</div>
+                        </div>
+                        <div class="admin-stat-card success">
+                            <div class="value" id="activeDrivers">0</div>
+                            <div class="label">Active Drivers</div>
+                        </div>
+                        <div class="admin-stat-card warning">
+                            <div class="value" id="pendingApprovals">0</div>
+                            <div class="label">Pending Approvals</div>
+                        </div>
+                        <div class="admin-stat-card primary">
+                            <div class="value" id="totalBookings">0</div>
+                            <div class="label">Total Bookings</div>
+                        </div>
+                        <div class="admin-stat-card success">
+                            <div class="value" id="completedBookings">0</div>
+                            <div class="label">Completed</div>
+                        </div>
+                        <div class="admin-stat-card danger">
+                            <div class="value" id="cancelledBookings">0</div>
+                            <div class="label">Cancelled</div>
+                        </div>
+                        <div class="admin-stat-card success">
+                            <div class="value" id="totalRevenue">₹0</div>
+                            <div class="label">Total Revenue</div>
+                        </div>
+                    </div>
+
+                    <!-- Today Stats -->
+                    <div class="quick-stats-grid">
+                        <div class="quick-stat-card">
+                            <h4>Today's Bookings</h4>
+                            <p class="value" id="todayBookings">0</p>
+                        </div>
+                        <div class="quick-stat-card">
+                            <h4>Today's Revenue</h4>
+                            <p class="value" id="todayRevenue">₹0</p>
+                        </div>
+                        <div class="quick-stat-card">
+                            <h4>Pending Bookings</h4>
+                            <p class="value" id="pendingBookings">0</p>
+                        </div>
+                    </div>
+
+                    <!-- Cards Grid -->
+                    <div class="card-grid">
+                        <div class="dashboard-card">
+                            <div class="card-header">
+                                <h3>Recent Bookings</h3>
+                                <a href="#" data-action="bookings">View All</a>
+                            </div>
+                            <div class="card-body">
+                                <ul class="mini-list" id="recentBookingsList">
+                                    <li class="empty-state">No recent bookings</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="dashboard-card">
+                            <div class="card-header">
+                                <h3>New Users</h3>
+                                <a href="#" data-action="users">View All</a>
+                            </div>
+                            <div class="card-body">
+                                <ul class="mini-list" id="recentUsersList">
+                                    <li class="empty-state">No recent users</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Pending Approvals -->
+                    <div class="pending-approval" id="pendingApprovalsSection">
+                        <h3><i class="fas fa-clock" style="color: var(--warning);"></i> Pending Driver Approvals</h3>
+                        <div class="pending-list" id="pendingDriversList">
+                            <p class="empty-state">No pending approvals</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Users Section -->
+                <section id="usersSection" class="content-section">
+                    <h2>Manage Users</h2>
+                    
+                    <div class="search-bar">
+                        <input type="text" id="userSearch" placeholder="Search users by name, email or phone...">
+                        <button class="btn btn-primary" onclick="searchUsers()">
+                            <i class="fas fa-search"></i> Search
+                        </button>
+                    </div>
+
+                    <div class="data-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>User</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                    <th>Joined</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="usersTableBody">
+                                <tr><td colspan="6" class="empty-state">Loading...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Drivers Section -->
+                <section id="driversSection" class="content-section">
+                    <h2>Manage Drivers</h2>
+                    
+                    <div class="filters-bar" style="margin-bottom: 20px;">
+                        <div class="filter-tabs">
+                            <button class="filter-tab active" data-filter="all">All</button>
+                            <button class="filter-tab" data-filter="approved">Approved</button>
+                            <button class="filter-tab" data-filter="pending">Pending</button>
+                            <button class="filter-tab" data-filter="online">Online</button>
+                        </div>
+                    </div>
+
+                    <div class="search-bar">
+                        <input type="text" id="driverSearch" placeholder="Search drivers...">
+                        <button class="btn btn-primary" onclick="searchDrivers()">
+                            <i class="fas fa-search"></i> Search
+                        </button>
+                    </div>
+
+                    <div class="data-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Driver</th>
+                                    <th>Vehicle</th>
+                                    <th>Rating</th>
+                                    <th>Rides</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="driversTableBody">
+                                <tr><td colspan="6" class="empty-state">Loading...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Bookings Section -->
+                <section id="bookingsSection" class="content-section">
+                    <h2>All Bookings</h2>
+                    
+                    <div class="filters-bar" style="margin-bottom: 20px;">
+                        <div class="filter-tabs">
+                            <button class="filter-tab active" data-status="">All</button>
+                            <button class="filter-tab" data-status="pending">Pending</button>
+                            <button class="filter-tab" data-status="accepted">Active</button>
+                            <button class="filter-tab" data-status="completed">Completed</button>
+                            <button class="filter-tab" data-status="cancelled">Cancelled</button>
+                        </div>
+                    </div>
+
+                    <div class="data-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Booking ID</th>
+                                    <th>User</th>
+                                    <th>Driver</th>
+                                    <th>Route</th>
+                                    <th>Fare</th>
+                                    <th>Status</th>
+                                    <th>Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="bookingsTableBody">
+                                <tr><td colspan="8" class="empty-state">Loading...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Vehicle Types Section -->
+                <section id="vehiclesSection" class="content-section">
+                    <h2>Vehicle Types & Pricing</h2>
+                    
+                    <button class="btn btn-primary" style="margin-bottom: 20px;" onclick="showAddVehicleModal()">
+                        <i class="fas fa-plus"></i> Add Vehicle Type
+                    </button>
+
+                    <div class="data-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Vehicle</th>
+                                    <th>Base Fare</th>
+                                    <th>Per Km</th>
+                                    <th>Per Min</th>
+                                    <th>Min Fare</th>
+                                    <th>Max Passengers</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="vehiclesTableBody">
+                                <tr><td colspan="8" class="empty-state">Loading...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Analytics Section -->
+                <section id="analyticsSection" class="content-section">
+                    <h2>Analytics</h2>
+                    
+                    <div class="filters-bar" style="margin-bottom: 20px;">
+                        <div class="filter-tabs">
+                            <button class="filter-tab active" data-period="7days">7 Days</button>
+                            <button class="filter-tab" data-period="30days">30 Days</button>
+                            <button class="filter-tab" data-period="90days">90 Days</button>
+                        </div>
+                    </div>
+
+                    <div class="card-grid">
+                        <div class="dashboard-card">
+                            <div class="card-header">
+                                <h3>Daily Bookings</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-placeholder" id="dailyBookingsChart">
+                                    <i class="fas fa-chart-line" style="font-size: 48px;"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="dashboard-card">
+                            <div class="card-header">
+                                <h3>Revenue Trend</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-placeholder" id="revenueChart">
+                                    <i class="fas fa-chart-bar" style="font-size: 48px;"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-grid">
+                        <div class="dashboard-card">
+                            <div class="card-header">
+                                <h3>Bookings by Vehicle</h3>
+                            </div>
+                            <div class="card-body">
+                                <ul class="mini-list" id="vehicleStatsList"></ul>
+                            </div>
+                        </div>
+                        <div class="dashboard-card">
+                            <div class="card-header">
+                                <h3>Top Drivers</h3>
+                            </div>
+                            <div class="card-body">
+                                <ul class="mini-list" id="topDriversList"></ul>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Toast -->
+    <div id="toast" class="toast hidden"></div>
+
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    <script src="/js/admin-dashboard.js"></script>
+</body>
+</html>

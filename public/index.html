@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transport Management System</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Location Permission Modal -->
+    <div id="locationModal" class="modal">
+        <div class="modal-content location-modal">
+            <div class="location-icon">
+                <i class="fas fa-map-marker-alt"></i>
+            </div>
+            <h2>Enable Location</h2>
+            <p>We need your location to find nearby drivers and provide accurate pickup services.</p>
+            <button id="allowLocationBtn" class="btn btn-primary btn-lg">
+                <i class="fas fa-location-arrow"></i> Allow Location Access
+            </button>
+            <button id="skipLocationBtn" class="btn btn-secondary">
+                Enter Location Manually
+            </button>
+        </div>
+    </div>
+
+    <!-- Main App Container -->
+    <div id="app" class="hidden">
+        <!-- Header -->
+        <header class="header">
+            <div class="container header-content">
+                <div class="logo">
+                    <i class="fas fa-car-side"></i>
+                    <span>TransportPro</span>
+                </div>
+                <nav class="nav-links">
+                    <a href="#home">Home</a>
+                    <a href="#services">Services</a>
+                    <a href="#about">About</a>
+                    <a href="#contact">Contact</a>
+                </nav>
+                <div class="auth-buttons">
+                    <button id="loginBtn" class="btn btn-outline">Login</button>
+                    <button id="signupBtn" class="btn btn-primary">Sign Up</button>
+                </div>
+                <button class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Hero Section -->
+        <section id="home" class="hero">
+            <div class="container hero-content">
+                <div class="hero-text">
+                    <h1>Your Ride, <span class="highlight">Your Way</span></h1>
+                    <p>Book reliable transportation instantly. Whether you need a quick bike ride or a spacious van, we've got you covered.</p>
+                    <div class="hero-search">
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="pickupInput" placeholder="Enter pickup location">
+                        </div>
+                        <div class="search-box">
+                            <i class="fas fa-map-pin"></i>
+                            <input type="text" id="dropoffInput" placeholder="Where to?">
+                        </div>
+                        <button id="searchRideBtn" class="btn btn-primary btn-lg">Find Ride</button>
+                    </div>
+                </div>
+                <div class="hero-image">
+                    <div class="car-animation">
+                        <div class="road"></div>
+                        <div class="car">🚗</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Services Section -->
+        <section id="services" class="services">
+            <div class="container">
+                <h2 class="section-title">Our Services</h2>
+                <div class="services-grid">
+                    <div class="service-card">
+                        <div class="service-icon">🏍️</div>
+                        <h3>Bike</h3>
+                        <p>Quick solo rides for short distances</p>
+                        <span class="price">From ₹20</span>
+                    </div>
+                    <div class="service-card">
+                        <div class="service-icon">🛺</div>
+                        <h3>Auto</h3>
+                        <p>Affordable three-wheeler rides</p>
+                        <span class="price">From ₹30</span>
+                    </div>
+                    <div class="service-card">
+                        <div class="service-icon">🚗</div>
+                        <h3>Car</h3>
+                        <p>Comfortable sedan for up to 4</p>
+                        <span class="price">From ₹50</span>
+                    </div>
+                    <div class="service-card">
+                        <div class="service-icon">🚙</div>
+                        <h3>SUV</h3>
+                        <p>Spacious SUV for families</p>
+                        <span class="price">From ₹80</span>
+                    </div>
+                    <div class="service-card">
+                        <div class="service-icon">🚐</div>
+                        <h3>Van</h3>
+                        <p>Group travel made easy</p>
+                        <span class="price">From ₹100</span>
+                    </div>
+                    <div class="service-card">
+                        <div class="service-icon">🚚</div>
+                        <h3>Truck</h3>
+                        <p>Goods & cargo transport</p>
+                        <span class="price">From ₹150</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="features">
+            <div class="container">
+                <div class="features-grid">
+                    <div class="feature">
+                        <i class="fas fa-shield-alt"></i>
+                        <h3>Safe Rides</h3>
+                        <p>All drivers are verified and vehicles are regularly inspected</p>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-clock"></i>
+                        <h3>24/7 Service</h3>
+                        <p>Book a ride anytime, anywhere</p>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-wallet"></i>
+                        <h3>Best Prices</h3>
+                        <p>Competitive rates with no hidden charges</p>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-headset"></i>
+                        <h3>Support</h3>
+                        <p>Round the clock customer support</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- How It Works -->
+        <section id="about" class="how-it-works">
+            <div class="container">
+                <h2 class="section-title">How It Works</h2>
+                <div class="steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <h3>Enter Location</h3>
+                        <p>Enter your pickup and drop-off locations</p>
+                    </div>
+                    <div class="step-arrow"><i class="fas fa-arrow-right"></i></div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <h3>Choose Vehicle</h3>
+                        <p>Select from various vehicle options</p>
+                    </div>
+                    <div class="step-arrow"><i class="fas fa-arrow-right"></i></div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <h3>Confirm & Ride</h3>
+                        <p>Confirm booking and enjoy your ride</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Become a Driver Section -->
+        <section class="become-driver">
+            <div class="container">
+                <div class="driver-content">
+                    <h2>Become a Driver Partner</h2>
+                    <p>Earn money on your schedule. Join thousands of drivers who are already earning with us.</p>
+                    <ul class="driver-benefits">
+                        <li><i class="fas fa-check"></i> Flexible working hours</li>
+                        <li><i class="fas fa-check"></i> Weekly payouts</li>
+                        <li><i class="fas fa-check"></i> Insurance coverage</li>
+                        <li><i class="fas fa-check"></i> Training & support</li>
+                    </ul>
+                    <button id="registerDriverBtn" class="btn btn-light btn-lg">Register as Driver</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer id="contact" class="footer">
+            <div class="container">
+                <div class="footer-grid">
+                    <div class="footer-section">
+                        <h3><i class="fas fa-car-side"></i> TransportPro</h3>
+                        <p>Your trusted transportation partner for safe, reliable, and affordable rides.</p>
+                    </div>
+                    <div class="footer-section">
+                        <h4>Quick Links</h4>
+                        <a href="#home">Home</a>
+                        <a href="#services">Services</a>
+                        <a href="#about">About Us</a>
+                        <a href="#contact">Contact</a>
+                    </div>
+                    <div class="footer-section">
+                        <h4>For Users</h4>
+                        <a href="#" id="footerLogin">Login</a>
+                        <a href="#" id="footerSignup">Sign Up</a>
+                        <a href="#">Book a Ride</a>
+                        <a href="#">Help Center</a>
+                    </div>
+                    <div class="footer-section">
+                        <h4>Contact Us</h4>
+                        <p><i class="fas fa-envelope"></i> support@transportpro.com</p>
+                        <p><i class="fas fa-phone"></i> +91 1234567890</p>
+                        <div class="social-links">
+                            <a href="#"><i class="fab fa-facebook"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                            <a href="#"><i class="fab fa-instagram"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer-bottom">
+                    <p>&copy; 2024 TransportPro. All rights reserved.</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal hidden">
+        <div class="modal-content auth-modal">
+            <button class="modal-close">&times;</button>
+            <h2>Welcome Back</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" name="email" required placeholder="Enter your email">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" name="password" required placeholder="Enter your password">
+                </div>
+                <div class="form-group role-select">
+                    <label>Login as</label>
+                    <select name="role">
+                        <option value="user">User</option>
+                        <option value="driver">Driver</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Login</button>
+            </form>
+            <p class="auth-switch">Don't have an account? <a href="#" id="switchToSignup">Sign Up</a></p>
+        </div>
+    </div>
+
+    <!-- Signup Modal -->
+    <div id="signupModal" class="modal hidden">
+        <div class="modal-content auth-modal">
+            <button class="modal-close">&times;</button>
+            
+            <!-- Role Selection Step -->
+            <div id="roleSelectionStep" class="signup-step active">
+                <h2>Join as</h2>
+                <p style="color: var(--gray); margin-bottom: 25px;">Select how you want to use TransportPro</p>
+                <div class="role-selection">
+                    <div class="role-card" data-role="user">
+                        <div class="role-icon">👤</div>
+                        <h3>Passenger</h3>
+                        <p>Book rides, travel safely, and track your driver in real-time</p>
+                        <ul class="role-features">
+                            <li><i class="fas fa-check"></i> Book any vehicle type</li>
+                            <li><i class="fas fa-check"></i> Multiple payment options</li>
+                            <li><i class="fas fa-check"></i> Real-time tracking</li>
+                        </ul>
+                    </div>
+                    <div class="role-card" data-role="driver">
+                        <div class="role-icon">🚗</div>
+                        <h3>Driver Partner</h3>
+                        <p>Earn money by driving passengers to their destinations</p>
+                        <ul class="role-features">
+                            <li><i class="fas fa-check"></i> Flexible working hours</li>
+                            <li><i class="fas fa-check"></i> Weekly payouts</li>
+                            <li><i class="fas fa-check"></i> Be your own boss</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Signup Forms (shown after role selection) -->
+            <div id="signupFormStep" class="signup-step">
+                <div class="step-header">
+                    <button id="backToRoleBtn" class="back-btn"><i class="fas fa-arrow-left"></i></button>
+                    <h2 id="signupFormTitle">Create Account</h2>
+                </div>
+                <div class="signup-tabs hidden">
+                    <button class="tab-btn active" data-tab="user">User</button>
+                    <button class="tab-btn" data-tab="driver">Driver</button>
+                </div>
+            
+            <!-- User Signup Form -->
+            <form id="userSignupForm" class="signup-form active">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" name="name" required placeholder="Enter your name">
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" name="email" required placeholder="Enter your email">
+                </div>
+                <div class="form-group">
+                    <label>Phone</label>
+                    <input type="tel" name="phone" required placeholder="Enter your phone">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" name="password" required minlength="6" placeholder="Min 6 characters">
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Sign Up</button>
+            </form>
+
+            <!-- Driver Signup Form -->
+            <form id="driverSignupForm" class="signup-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" name="name" required placeholder="Your name">
+                    </div>
+                    <div class="form-group">
+                        <label>Phone</label>
+                        <input type="tel" name="phone" required placeholder="Phone number">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" name="email" required placeholder="Your email">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" name="password" required minlength="6" placeholder="Min 6 characters">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Vehicle Type</label>
+                        <select name="vehicleType" required>
+                            <option value="bike">Bike</option>
+                            <option value="auto">Auto</option>
+                            <option value="car">Car</option>
+                            <option value="suv">SUV</option>
+                            <option value="van">Van</option>
+                            <option value="truck">Truck</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Vehicle Number</label>
+                        <input type="text" name="vehicleNumber" required placeholder="e.g., DL 01 AB 1234">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Vehicle Model</label>
+                        <input type="text" name="vehicleModel" required placeholder="e.g., Swift">
+                    </div>
+                    <div class="form-group">
+                        <label>Vehicle Color</label>
+                        <input type="text" name="vehicleColor" required placeholder="e.g., White">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>License Number</label>
+                        <input type="text" name="licenseNumber" required placeholder="License number">
+                    </div>
+                    <div class="form-group">
+                        <label>License Expiry</label>
+                        <input type="date" name="licenseExpiry" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Register as Driver</button>
+            </form>
+
+            <p class="auth-switch">Already have an account? <a href="#" id="switchToLogin">Login</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast hidden">
+        <span id="toastMessage"></span>
+    </div>
+
+    <script src="/js/app.js"></script>
+</body>
+</html>

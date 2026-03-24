@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Driver Dashboard - TransportPro</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fas fa-car-side"></i>
+                    <span>TransportPro</span>
+                </div>
+                <span class="badge driver-badge">Driver</span>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active" data-section="home">
+                    <i class="fas fa-home"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#" class="nav-item" data-section="requests">
+                    <i class="fas fa-bell"></i>
+                    <span>Ride Requests</span>
+                    <span class="nav-badge" id="requestCount">0</span>
+                </a>
+                <a href="#" class="nav-item" data-section="rides">
+                    <i class="fas fa-history"></i>
+                    <span>My Rides</span>
+                </a>
+                <a href="#" class="nav-item" data-section="earnings">
+                    <i class="fas fa-wallet"></i>
+                    <span>Earnings</span>
+                </a>
+                <a href="#" class="nav-item" data-section="profile">
+                    <i class="fas fa-user"></i>
+                    <span>Profile</span>
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <button id="logoutBtn" class="btn btn-outline btn-block">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Logout
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="dashboard-header">
+                <button class="menu-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="header-right">
+                    <div class="approval-status" id="approvalStatus">
+                        <i class="fas fa-clock"></i>
+                        <span>Pending Approval</span>
+                    </div>
+                    <div class="user-info">
+                        <img id="userAvatar" src="/images/default-avatar.png" alt="Driver" class="avatar">
+                        <span id="userName">Driver</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Dashboard Content -->
+            <div class="dashboard-content">
+                <!-- Home Section -->
+                <section id="homeSection" class="content-section active">
+                    <!-- Online/Offline Toggle -->
+                    <div class="status-toggle">
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="onlineToggle">
+                            <span class="toggle-slider"></span>
+                        </label>
+                        <div class="toggle-label">
+                            <span class="status-indicator" id="statusDot"></span>
+                            <span id="onlineStatus">You are Offline</span>
+                        </div>
+                        <div class="toggle-info">
+                            <span id="toggleInfo">Go online to receive ride requests</span>
+                        </div>
+                    </div>
+
+                    <!-- Current Ride -->
+                    <div id="currentRideSection" class="hidden">
+                        <div class="current-ride-card">
+                            <h3><i class="fas fa-car"></i> Current Ride</h3>
+                            <div class="ride-info">
+                                <div class="passenger-info">
+                                    <img id="passengerPhoto" src="/images/default-avatar.png" alt="Passenger">
+                                    <div>
+                                        <h4 id="passengerName">Passenger Name</h4>
+                                        <p><i class="fas fa-phone"></i> <span id="passengerPhone">+91 XXXXXXXXXX</span></p>
+                                    </div>
+                                </div>
+                                <div class="route-info" style="color: white; margin-top: 15px;">
+                                    <div class="route-point">
+                                        <div class="pickup-dot" style="background: #10b981;"></div>
+                                        <span id="currentPickup">Pickup Location</span>
+                                    </div>
+                                    <div class="route-point" style="margin-top: 10px;">
+                                        <div class="dropoff-dot" style="background: white;"></div>
+                                        <span id="currentDropoff">Drop-off Location</span>
+                                    </div>
+                                </div>
+                                <div class="fare-info" style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px; margin-top: 15px;">
+                                    <span>Fare: ₹<span id="currentFare">0</span></span>
+                                    <span>Distance: <span id="currentDistance">0</span> km</span>
+                                </div>
+                            </div>
+                            <div class="ride-actions" id="rideActions" style="display: flex; gap: 10px; margin-top: 15px;">
+                                <!-- Actions will be added dynamically -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Stats Cards -->
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon bg-success">
+                                <i class="fas fa-rupee-sign"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 id="todayEarnings">₹0</h3>
+                                <p>Today's Earnings</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon bg-primary">
+                                <i class="fas fa-car"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 id="todayRides">0</h3>
+                                <p>Today's Rides</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon bg-warning">
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 id="driverRating">0.0</h3>
+                                <p>Rating</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon bg-info">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 id="totalRides">0</h3>
+                                <p>Total Rides</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Stats -->
+                    <div class="quick-stats-grid">
+                        <div class="quick-stat-card">
+                            <h4>Total Earnings</h4>
+                            <p class="value" id="totalEarnings">₹0</p>
+                        </div>
+                        <div class="quick-stat-card">
+                            <h4>This Week</h4>
+                            <p class="value" id="weekEarnings">₹0</p>
+                        </div>
+                        <div class="quick-stat-card">
+                            <h4>This Month</h4>
+                            <p class="value" id="monthEarnings">₹0</p>
+                        </div>
+                    </div>
+
+                    <!-- Recent Rides -->
+                    <div class="recent-rides-section">
+                        <div class="section-header">
+                            <h2>Recent Rides</h2>
+                            <a href="#" data-action="rides">View All</a>
+                        </div>
+                        <div id="recentRidesList" class="rides-list">
+                            <div class="empty-state">
+                                <i class="fas fa-car"></i>
+                                <p>No recent rides</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Ride Requests Section -->
+                <section id="requestsSection" class="content-section">
+                    <h2>Ride Requests</h2>
+                    <p class="section-subtitle">Available ride requests in your area</p>
+                    
+                    <div id="requestsList" class="requests-list">
+                        <div class="empty-state">
+                            <i class="fas fa-bell-slash"></i>
+                            <p>No ride requests available</p>
+                            <small>Go online to receive requests</small>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- My Rides Section -->
+                <section id="ridesSection" class="content-section">
+                    <h2>Ride History</h2>
+                    
+                    <div class="filters-bar">
+                        <div class="filter-tabs">
+                            <button class="filter-tab active" data-status="">All</button>
+                            <button class="filter-tab" data-status="completed">Completed</button>
+                            <button class="filter-tab" data-status="cancelled">Cancelled</button>
+                        </div>
+                    </div>
+
+                    <div id="allRidesList" class="rides-list-full">
+                        <div class="empty-state">
+                            <i class="fas fa-car"></i>
+                            <p>No rides found</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Earnings Section -->
+                <section id="earningsSection" class="content-section">
+                    <h2>Earnings</h2>
+                    
+                    <div class="earnings-overview">
+                        <div class="earnings-card main">
+                            <h3>Total Earnings</h3>
+                            <p class="amount" id="totalEarningsDisplay">₹0</p>
+                        </div>
+                        <div class="earnings-grid">
+                            <div class="earnings-card">
+                                <h4>Today</h4>
+                                <p class="amount" id="todayEarningsDisplay">₹0</p>
+                            </div>
+                            <div class="earnings-card">
+                                <h4>This Week</h4>
+                                <p class="amount" id="weekEarningsDisplay">₹0</p>
+                            </div>
+                            <div class="earnings-card">
+                                <h4>This Month</h4>
+                                <p class="amount" id="monthEarningsDisplay">₹0</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="earnings-history">
+                        <h3>Recent Transactions</h3>
+                        <div id="transactionsList" class="transactions-list">
+                            <!-- Transactions will be loaded here -->
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Profile Section -->
+                <section id="profileSection" class="content-section">
+                    <h2>My Profile</h2>
+                    
+                    <div class="profile-container">
+                        <div class="profile-card">
+                            <div class="profile-header">
+                                <div class="avatar-upload">
+                                    <img id="profileAvatar" src="/images/default-avatar.png" alt="Profile">
+                                </div>
+                                <h3 id="profileName">Driver Name</h3>
+                                <p id="profileEmail">driver@email.com</p>
+                                <div class="driver-rating-display">
+                                    <i class="fas fa-star"></i>
+                                    <span id="profileRating">0.0</span>
+                                    <span class="rating-count">(<span id="ratingCount">0</span> ratings)</span>
+                                </div>
+                            </div>
+                            
+                            <div class="profile-details">
+                                <h4>Vehicle Details</h4>
+                                <div class="detail-row">
+                                    <span>Vehicle Type</span>
+                                    <span id="vehicleType">-</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span>Vehicle Number</span>
+                                    <span id="vehicleNumber">-</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span>Vehicle Model</span>
+                                    <span id="vehicleModel">-</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span>Vehicle Color</span>
+                                    <span id="vehicleColor">-</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span>License Number</span>
+                                    <span id="licenseNumber">-</span>
+                                </div>
+                            </div>
+                            
+                            <form id="profileForm" class="profile-form">
+                                <h4>Personal Details</h4>
+                                <div class="form-group">
+                                    <label>Full Name</label>
+                                    <input type="text" id="profileNameInput" name="name" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Phone Number</label>
+                                    <input type="tel" id="profilePhone" name="phone" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-block">
+                                    Update Profile
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- OTP Verification Modal -->
+    <div id="otpModal" class="modal hidden">
+        <div class="modal-content">
+            <h2>Enter OTP to Start Ride</h2>
+            <p>Ask the passenger for the 4-digit OTP</p>
+            <input type="text" id="otpInput" maxlength="4" placeholder="Enter OTP" class="otp-input">
+            <button id="verifyOtpBtn" class="btn btn-primary btn-block">Verify & Start Ride</button>
+            <button id="cancelOtpBtn" class="btn btn-secondary btn-block">Cancel</button>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div id="toast" class="toast hidden"></div>
+
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    <script src="/js/driver-dashboard.js"></script>
+</body>
+</html>
