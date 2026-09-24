@@ -16,56 +16,61 @@ const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/transport-
 // Default vehicle types
 const vehicleTypes = [
     {
-        name: 'Bike',
+        name: 'bike',
+        displayName: 'Bike',
         description: 'Quick rides for short distances',
-        icon: 'motorcycle',
-        baseFare: 15,
-        perKm: 7,
-        perMin: 1,
-        minFare: 25,
+        icon: '🏍️',
+        baseFare: 20,
+        perKmRate: 8,
+        perMinRate: 1,
+        minFare: 30,
         maxPassengers: 1,
         isActive: true
     },
     {
-        name: 'Auto',
+        name: 'auto',
+        displayName: 'Auto',
         description: 'Affordable three-wheeler rides',
-        icon: 'taxi',
-        baseFare: 25,
-        perKm: 12,
-        perMin: 1.5,
-        minFare: 30,
+        icon: '🛺',
+        baseFare: 30,
+        perKmRate: 12,
+        perMinRate: 1.5,
+        minFare: 40,
         maxPassengers: 3,
         isActive: true
     },
     {
-        name: 'Sedan',
+        name: 'sedan',
+        displayName: 'Sedan',
         description: 'Comfortable sedan cars',
-        icon: 'car',
-        baseFare: 40,
-        perKm: 15,
-        perMin: 2,
+        icon: '🚗',
+        baseFare: 50,
+        perKmRate: 15,
+        perMinRate: 2,
         minFare: 80,
         maxPassengers: 4,
         isActive: true
     },
     {
-        name: 'SUV',
+        name: 'suv',
+        displayName: 'SUV',
         description: 'Spacious SUVs for groups',
-        icon: 'car-side',
-        baseFare: 60,
-        perKm: 20,
-        perMin: 2.5,
+        icon: '🚙',
+        baseFare: 80,
+        perKmRate: 20,
+        perMinRate: 2.5,
         minFare: 120,
         maxPassengers: 6,
         isActive: true
     },
     {
-        name: 'Premium',
+        name: 'premium',
+        displayName: 'Premium',
         description: 'Luxury rides for special occasions',
-        icon: 'car-alt',
+        icon: '✨',
         baseFare: 100,
-        perKm: 30,
-        perMin: 3,
+        perKmRate: 30,
+        perMinRate: 3,
         minFare: 200,
         maxPassengers: 4,
         isActive: true
@@ -111,35 +116,35 @@ const users = [
 // Default drivers (will be linked to driver users)
 const drivers = [
     {
-        vehicleType: 'Sedan',
+        vehicleType: 'car',
         vehicleNumber: 'MH12AB1234',
         vehicleModel: 'Honda City',
         vehicleColor: 'White',
         licenseNumber: 'MH1234567890',
+        licenseExpiry: new Date(Date.now() + 365*24*60*60*1000),
         isApproved: true,
         isOnline: true,
         isAvailable: true,
-        rating: 4.5,
-        totalRides: 150,
-        location: {
+        rating: { average: 4.5, count: 150 },
+        currentLocation: {
             type: 'Point',
-            coordinates: [72.8777, 19.0760] // Mumbai coordinates
+            coordinates: [72.8777, 19.0760]
         }
     },
     {
-        vehicleType: 'Bike',
+        vehicleType: 'bike',
         vehicleNumber: 'MH12CD5678',
         vehicleModel: 'Bajaj Pulsar',
         vehicleColor: 'Black',
         licenseNumber: 'MH9876543210',
+        licenseExpiry: new Date(Date.now() + 365*24*60*60*1000),
         isApproved: true,
         isOnline: false,
         isAvailable: true,
-        rating: 4.8,
-        totalRides: 320,
-        location: {
+        rating: { average: 4.8, count: 320 },
+        currentLocation: {
             type: 'Point',
-            coordinates: [72.8900, 19.0800] // Mumbai coordinates
+            coordinates: [72.8900, 19.0800]
         }
     }
 ];
@@ -198,23 +203,23 @@ async function seedDatabase() {
             const booking = await Booking.create({
                 user: testUser._id,
                 driver: testDriver._id,
-                vehicleType: 'Sedan',
+                vehicleType: 'car',
                 pickup: {
                     address: 'Bandra Station, Mumbai',
-                    coordinates: {
+                    location: {
                         type: 'Point',
                         coordinates: [72.8397, 19.0544]
                     }
                 },
                 dropoff: {
                     address: 'Andheri East, Mumbai',
-                    coordinates: {
+                    location: {
                         type: 'Point',
                         coordinates: [72.8479, 19.1136]
                     }
                 },
                 distance: 7.5,
-                estimatedDuration: 25,
+                duration: 25,
                 fare: {
                     baseFare: 40,
                     distanceFare: 112.5,
@@ -224,11 +229,11 @@ async function seedDatabase() {
                 status: 'completed',
                 otp: '1234',
                 timeline: {
-                    createdAt: new Date(Date.now() - 3600000),
-                    acceptedAt: new Date(Date.now() - 3500000),
-                    arrivedAt: new Date(Date.now() - 3300000),
-                    startedAt: new Date(Date.now() - 3200000),
-                    completedAt: new Date(Date.now() - 1800000)
+                    requested: new Date(Date.now() - 3600000),
+                    accepted: new Date(Date.now() - 3500000),
+                    arriving: new Date(Date.now() - 3300000),
+                    started: new Date(Date.now() - 3200000),
+                    completed: new Date(Date.now() - 1800000)
                 }
             });
             console.log('  ✓ Created sample completed booking');
